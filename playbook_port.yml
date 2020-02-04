@@ -46,7 +46,7 @@
         <p><img src="https://www.santevet.com/upload/admin/images/article/Chien%202/races_de_chiens/siberian-husky.jpg"</p>  
       insertafter: "<body>"
 
- # démarrer le service httpd si'il n'est pas démarré 
+ # démarrer le service httpd s'il n'est pas démarré 
   - name: start httpd
     service:
      name: httpd
