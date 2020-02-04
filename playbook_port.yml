@@ -1,0 +1,59 @@
+---
+
+# le nom de l'hôte
+- hosts:	localhost
+  become: yes
+
+# on déclare les éventuelles variables
+  vars:
+   httpd_port: 9999
+
+# liste des taches à réaliser
+  tasks:
+ # installer apache httpd
+  - name: install Apache
+    yum:
+     name: httpd
+     state: present
+
+ # changer le port pour httpd
+  - name: start httpd
+    template:
+     src: /home/vagrant/repo_ansible2/httpd.j2
+     dest: /etc/httpd/conf/httpd.conf
+    notify:
+     - restart httpd
+
+ # modifier le contenu de la page web
+  - name: create index.html file
+    file:
+     name: /var/www/html/index.html
+     state: touch
+
+  - name: add web content
+    lineinfile:
+     line: "hhhhhhhhhh"
+     path: /var/www/html/index.html
+
+  - name: Insert/Update HTML surrounded by custom markers after <body> line
+    blockinfile:
+      path: /var/www/html/index.html
+      marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+      insertafter: "<body>"
+      block: |
+        <h1>Welcome to {{ ansible_hostname }}</h1>
+        <p>Last updated on {{ ansible_date_time.iso8601 }}</p>
+        <p><img src="https://www.santevet.com/upload/admin/images/article/Chien%202/races_de_chiens/siberian-husky.jpg"</p>  
+      insertafter: "<body>"
+
+ # démarrer le service httpd si'il n'est pas démarré 
+  - name: start httpd
+    service:
+     name: httpd
+     state: started
+
+ # lancer le service httpd après l'éxecution de la liste de taches
+  handlers:
+  - name: restart httpd
+    service: name=httpd state=restarted
+    listen: "restart httpd" 
