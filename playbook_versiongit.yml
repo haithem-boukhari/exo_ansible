@@ -1,0 +1,11 @@
+---
+- hosts: my_hosts
+  become: yes
+  tasks:
+  - shell: git --version 
+    register: result
+
+  - name: display git version
+    debug:
+     var: result.stdout
+

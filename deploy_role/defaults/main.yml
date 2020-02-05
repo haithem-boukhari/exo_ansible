@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_role
+list: [cert, '/home/vagrant/repo_ansible2/inventory', '/home/vagrant/repo_ansible2/httpd.j2']

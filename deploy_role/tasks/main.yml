@@ -1,0 +1,7 @@
+---
+# tasks file for deploy_role
+- name: copier un fichier sur un serveur remote
+  copy:
+    src: "{{ item }}" 
+    dest: /home/vagrant/
+  loop: "{{ list }}"
