@@ -1,0 +1,54 @@
+---
+# tasks file for role_artifactory
+- name: install net-tools
+  package:  
+   name: net-tools
+   state: present
+
+- name: install rpm
+  package:
+   name: rpm
+   state: present
+
+- name: install rsync
+  package: 
+   name: rsync
+   state: present
+
+- name: curl de artifactory
+  get_url:
+   url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss-6.17.0.rpm
+   dest: /opt
+
+
+- name: install artifactory
+  yum:
+   name: /opt/jfrog-artifactory-oss-6.17.0.rpm
+   state: present
+
+
+- name: modifier le PATH
+  shell:
+    cmd: "{{ item }}"
+  with_items:
+   - echo 'export ARTIFACTORY_HOME=/opt/jfrog/artifactory' > /etc/profile.d/artifactory.sh
+   - echo 'export PATH=$PATH:$ARTIFACTORY_HOME/bin' >> /etc/profile.d/artifactory.sh
+
+- name: install mariadb-server
+  yum:
+   name: mariadb-server
+   state: present
+
+- name: Start and enable mariadb service
+  systemd:
+    name: mariadb.service
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Start and enable artifactory service
+  systemd:
+    name: artifactory.service
+    state: started
+    enabled: true
+    daemon_reload: true

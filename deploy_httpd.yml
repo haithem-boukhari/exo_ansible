@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+#   - /home/vagrant/repo_ansible3/test-role-1
+   - install_jenkins

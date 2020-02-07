@@ -1,0 +1,11 @@
+---
+# tasks file for role_apache
+- name: install Apache
+  yum:
+   name: httpd
+   state: present
+
+- name: start httpd
+  service:
+   name: httpd
+   state: started
