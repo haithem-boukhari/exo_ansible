@@ -1,7 +1,19 @@
 ---
 # tasks file for role_artifactory
+- name: add artifactory group
+  group:
+    name: tomcat
+
+- name: add artifactory user
+  user:
+    name: tomcat
+    group: tomcat
+    home: /user/share/jfrog
+    createhome: no
+
+
 - name: install net-tools
-  package:  
+  package:
    name: net-tools
    state: present
 
@@ -11,14 +23,14 @@
    state: present
 
 - name: install rsync
-  package: 
+  package:
    name: rsync
    state: present
 
-- name: curl de artifactory
-  get_url:
-   url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss-6.17.0.rpm
-   dest: /opt
+#- name: curl de artifactory
+#  get_url:
+#   url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss-6.17.0.rpm
+#   dest: /opt
 
 
 - name: install artifactory
@@ -26,6 +38,14 @@
    name: /opt/jfrog-artifactory-oss-6.17.0.rpm
    state: present
 
+- name: Change ownership
+  file:
+    path: /opt/jfrog
+    owner: artifactory
+    group: artifactory
+    mode: "u+rwx,g+rx,o=rx"
+    recurse: yes
+    state: directory
 
 - name: modifier le PATH
   shell:
@@ -34,17 +54,33 @@
    - echo 'export ARTIFACTORY_HOME=/opt/jfrog/artifactory' > /etc/profile.d/artifactory.sh
    - echo 'export PATH=$PATH:$ARTIFACTORY_HOME/bin' >> /etc/profile.d/artifactory.sh
 
-- name: install mariadb-server
-  yum:
-   name: mariadb-server
-   state: present
+- name: recharger le PATH
+  shell:
+    cmd: . /etc/profile.d/artifactory.sh
 
-- name: Start and enable mariadb service
+
+- name: modifier le fichier artifactory.service
+  lineinfile:
+    path: /lib/systemd/system/artifactory.service
+    insertafter: '^ExecStop'
+    line: "{{ item }}"
+  with_items:
+   - User=artifactory
+   - Group=artifactory
+
+- name: modifier les limites
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "{{ item }}"
+  with_items:
+   - artifactory soft nofile 32000
+   - artifactory hard nofile 32000
+
+
+
+- name: Gestion du service
   systemd:
-    name: mariadb.service
-    state: started
-    enabled: true
-    daemon_reload: true
+   daemon_reload: yes
 
 - name: Start and enable artifactory service
   systemd:
