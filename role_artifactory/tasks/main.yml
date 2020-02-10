@@ -27,10 +27,10 @@
    name: rsync
    state: present
 
-#- name: curl de artifactory
-#  get_url:
-#   url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss-6.17.0.rpm
-#   dest: /opt
+- name: curl de artifactory
+  get_url:
+   url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss-6.17.0.rpm
+   dest: /opt
 
 
 - name: install artifactory
