@@ -19,7 +19,7 @@
 
 - name: download & unarchive
   unarchive:
-    src: https://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.30/bin/apache-tomcat-9.0.30.tar.gz
+    src: http://us.mirrors.quenda.co/apache/tomcat/tomcat-9/v9.0.31/bin/apache-tomcat-9.0.31.tar.gz
     dest: /opt/tomcat
     remote_src: yes
     extra_opts: [--strip-components=1]
