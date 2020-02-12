@@ -2,4 +2,4 @@
 - hosts: my_hosts
   become: yes
   roles:
-   - /home/vagrant/repo_ansible2/role_tomcat
+   - role_tomcat
