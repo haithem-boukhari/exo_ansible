@@ -2,4 +2,4 @@
 - hosts: my_hosts
   become: yes
   roles:
-   - role_tomcat
+   - ../role_tomcat
